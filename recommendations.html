@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations - Virtual Farming</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <script>
+(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="fqw8ak8MUkge77wso_bEH";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+</script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 7v10l10 5 10-5V7l-10-5zm0 2.24L18.63 7 12 9.76 5.37 7 12 4.24zM4 8.76l8 4.8 8-4.8v7.48l-8 4.8-8-4.8V8.76z"/>
+                </svg>
+                <span class="logo-text">Virtual Farming</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="home.html" class="nav-link">Home</a></li>
+                <li><a href="research.html" class="nav-link">Research</a></li>
+                <li><a href="recommendations.html" class="nav-link active">Recommendations</a></li>
+                <li><a href="hydroponics-planner.html" class="nav-link">Hydroponics Planner</a></li>
+                <li><a href="about.html" class="nav-link">About Us</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobile-menu-btn"><span>☰</span></button>
+        </div>
+        <div class="mobile-menu" id="mobile-menu">
+            <ul class="mobile-nav-links">
+                <li><a href="home.html" class="mobile-nav-link">Home</a></li>
+                <li><a href="research.html" class="mobile-nav-link">Research</a></li>
+                <li><a href="recommendations.html" class="mobile-nav-link active">Recommendations</a></li>
+                <li><a href="hydroponics-planner.html" class="mobile-nav-link">Hydroponics Planner</a></li>
+                <li><a href="about.html" class="mobile-nav-link">About Us</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="page-header section">
+            <div class="container">
+                <div class="header-content">
+                    <h1 class="page-title">Actionable Recommendations</h1>
+                    <p class="page-description">
+                        Based on our extensive research, here are actionable steps communities can take to 
+                        establish successful hydroponic garden projects that improve local food security and build 
+                        stronger neighborhood connections.
+                    </p>
+                    <div class="header-stats">
+                        <div class="stat">
+                            <span class="stat-number">90%</span>
+                            <span class="stat-label">Water Savings</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">3-5x</span>
+                            <span class="stat-label">Faster Growth</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">30-50%</span>
+                            <span class="stat-label">Higher Yields</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="quick-wins section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Quick Wins</h2>
+                    <p class="section-subtitle">Immediate Actions You Can Take to Get Started</p>
+                </div>
+                <div class="wins-grid">
+                    <div class="win-card">
+                        <div class="win-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <img src="https://extension.oregonstate.edu/sites/extd8/files/styles/full/public/images/2025-03/dwc-side-view-cutaway_0.jpg?itok=ov1mMABE" alt="Deep Water Culture System" class="win-image">
+                        <div class="win-content">
+                            <h3 class="win-title">Start with Deep Water Culture</h3>
+                            <p class="win-description">Begin with a simple Deep Water Culture (DWC) system for easy setup and maintenance.</p>
+                        </div>
+                    </div>
+                    <div class="win-card">
+                        <div class="win-icon">
+                            <i class="fas fa-vial"></i>
+                        </div>
+                        <img src="https://m.media-amazon.com/images/I/61VNRrXrVTL.jpg" alt="Digital pH Meter" class="win-image">
+                        <div class="win-content">
+                            <h3 class="win-title">Invest in Digital pH Meter</h3>
+                            <p class="win-description">Accurate pH measurements are crucial for plant health and nutrient absorption.</p>
+                        </div>
+                    </div>
+                    <div class="win-card">
+                        <div class="win-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <img src="https://ceresgs.com/wp-content/uploads/2025/06/Viemose-25--1024x682.jpg" alt="Hydroponic Lettuce and Herbs" class="win-image">
+                        <div class="win-content">
+                            <h3 class="win-title">Begin with Easy Plants</h3>
+                            <p class="win-description">Start with lettuce, herbs, or leafy greens for higher success rates.</p>
+                        </div>
+                    </div>
+                    <div class="win-card">
+                        <div class="win-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="win-content">
+                            <h3 class="win-title">Use Opaque Containers</h3>
+                            <p class="win-description">Prevent algae growth by using light-blocking containers for your system.</p>
+                        </div>
+                    </div>
+                    <div class="win-card">
+                        <div class="win-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="win-content">
+                            <h3 class="win-title">Automate Lighting</h3>
+                            <p class="win-description">Use timers for consistent light cycles that match your plants' needs.</p>
+                        </div>
+                    </div>
+                    <div class="win-card">
+                        <div class="win-icon">
+                            <i class="fas fa-thermometer-half"></i>
+                        </div>
+                        <div class="win-content">
+                            <h3 class="win-title">Monitor Water Temperature</h3>
+                            <p class="win-description">Use an aquarium thermometer to maintain optimal water conditions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="roadmap section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Implementation Roadmap</h2>
+                    <p class="section-subtitle">A Step-by-Step Guide to Hydroponic Success</p>
+                </div>
+                <div class="roadmap-container">
+                    <div class="roadmap-phase">
+                        <div class="phase-header">
+                            <div class="phase-number">1</div>
+                            <div class="phase-info">
+                                <h3 class="phase-title">System Setup</h3>
+                                <span class="phase-priority high">High Priority</span>
+                            </div>
+                        </div>
+                        <img src="http://letpot.com/cdn/shop/articles/WechatIMG354.jpg?v=1714026762&width=2048" alt="Hydroponic System Setup" class="phase-image">
+                        <div class="phase-steps">
+                            <div class="phase-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h4 class="step-title">Choose Your System Type</h4>
+                                    <p class="step-time">Week 1</p>
+                                    <p>Select a beginner-friendly system like Deep Water Culture (DWC) or Kratky method</p>
+                                </div>
+                            </div>
+                            <div class="phase-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-tools"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h4 class="step-title">Gather Essential Equipment</h4>
+                                    <p class="step-time">Week 1-2</p>
+                                    <p>Acquire containers, air pumps, net pots, growing medium, and pH testing supplies</p>
+                                </div>
+                            </div>
+                            <div class="phase-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-sun"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h4 class="step-title">Set Up Growing Environment</h4>
+                                    <p class="step-time">Week 2</p>
+                                    <p>Prepare your space with proper lighting and temperature control</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="roadmap-phase">
+                        <div class="phase-header">
+                            <div class="phase-number">2</div>
+                            <div class="phase-info">
+                                <h3 class="phase-title">Plant Management</h3>
+                                <span class="phase-priority high">High Priority</span>
+                            </div>
+                        </div>
+                        <img src="https://growdirector.com/wp-content/uploads/2024/03/Hydroponic-water-management-2.jpg" alt="Hydroponic Nutrient Management" class="phase-image">
+                        <div class="phase-steps">
+                            <div class="phase-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-leaf"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h4 class="step-title">Select Appropriate Plants</h4>
+                                    <p class="step-time">Week 2</p>
+                                    <p>Start with easy crops like lettuce, herbs, or strawberries</p>
+                                </div>
+                            </div>
+                            <div class="phase-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h4 class="step-title">Germination & Transplanting</h4>
+                                    <p class="step-time">Week 3</p>
+                                    <p>Start seeds in rockwool cubes and transfer to system once established</p>
+                                </div>
+                            </div>
+                            <div class="phase-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-flask"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h4 class="step-title">Nutrient Management</h4>
+                                    <p class="step-time">Ongoing</p>
+                                    <p>Mix hydroponic-specific nutrients and maintain proper pH levels (5.5-6.5)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="roadmap-phase">
+                        <div class="phase-header">
+                            <div class="phase-number">3</div>
+                            <div class="phase-info">
+                                <h3 class="phase-title">Maintenance & Optimization</h3>
+                                <span class="phase-priority medium">Medium Priority</span>
+                            </div>
+                        </div>
+                        <img src="https://sensorex.com/wp-content/smush-webp/2023/04/Hydrponics-Sensorex-Probe-v1-web-1024x615.jpg.webp" alt="Hydroponic Maintenance Tools" class="phase-image">
+                        <div class="phase-steps">
+                            <div class="phase-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-clipboard-check"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h4 class="step-title">Establish Monitoring Routine</h4>
+                                    <p class="step-time">Week 4</p>
+                                    <p>Check pH, TDS, and water temperature regularly (2-3 times per week)</p>
+                                </div>
+                            </div>
+                            <div class="phase-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-recycle"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h4 class="step-title">System Maintenance</h4>
+                                    <p class="step-time">Weekly</p>
+                                    <p>Change nutrient solution every 1-2 weeks and clean components between cycles</p>
+                                </div>
+                            </div>
+                            <div class="phase-step">
+                                <div class="step-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="step-content">
+                                    <h4 class="step-title">Troubleshooting & Expansion</h4>
+                                    <p class="step-time">Month 2+</p>
+                                    <p>Address common issues like root rot or nutrient deficiencies and consider expanding</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="success-metrics section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Expected Outcomes</h2>
+                    <p class="section-subtitle">The Benefits of Hydroponic Gardening</p>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="metric-value">90%</div>
+                        <p class="metric-label">Water savings compared to soil gardening</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="metric-value">3-5x</div>
+                        <p class="metric-label">Faster growth rate for most plants</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-weight-hanging"></i>
+                        </div>
+                        <div class="metric-value">30-50%</div>
+                        <p class="metric-label">Higher yields in same space compared to soil</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="metric-value">Year-round</div>
+                        <p class="metric-label">Growing season regardless of weather</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section section">
+            <div class="container">
+                <div class="cta-content">
+                    <h2 class="cta-title">Ready to Start Your Hydroponic Journey?</h2>
+                    <p class="cta-description">Use our Hydroponics Planner to design your perfect system and get personalized recommendations.</p>
+                    <a href="hydroponics-planner.html" class="cta-button">Try Our Planner</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">© 2025 Cyber Shield | Hydroponic Innovation for a Sustainable Future</p>
+        </div>
+    </footer>
+
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --primary-light: #4caf50;
+            --primary-dark: #17db24;
+            --secondary-color: #7cb342;
+            --accent-color: #ff9800;
+            --light-color: #f1f8e9;
+            --dark-color: #1b5e20;
+            --text-color: #333;
+            --light-text: #666;
+            --background: #f9f9f9;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+            --border-radius: 12px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section {
+            padding: 80px 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--secondary-color);
+            border-radius: 2px;
+        }
+        
+        .section-subtitle {
+            color: var(--light-text);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            text-align: center;
+            padding: 100px 0;
+        }
+        
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .page-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: var(--white);
+        }
+        
+        .page-description {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            color: var(--white);
+        }
+        
+        .header-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            color: var(--white);
+        }
+        
+        /* Quick Wins */
+        .quick-wins {
+            background-color: var(--white);
+        }
+        
+        .wins-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .win-card {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .win-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .win-icon {
+            width: 60px;
+            height: 60px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+        
+        .win-image {
+            width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+        
+        .win-content {
+            flex: 1;
+        }
+        
+        .win-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+        }
+        
+        .win-description {
+            color: var(--light-text);
+        }
+        
+        /* Roadmap */
+        .roadmap {
+            background-color: var(--background);
+        }
+        
+        .roadmap-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        
+        .roadmap-phase {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .phase-header {
+            padding: 25px 30px;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        
+        .phase-number {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .phase-info {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .phase-title {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        
+        .phase-priority {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .phase-priority.high {
+            background-color: #ff5252;
+            color: white;
+        }
+        
+        .phase-priority.medium {
+            background-color: #ffb74d;
+            color: white;
+        }
+        
+        .phase-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        
+        .phase-steps {
+            padding: 30px;
+        }
+        
+        .phase-step {
+            display: flex;
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .phase-step:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+        
+        .step-time {
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        
+        /* Success Metrics */
+        .success-metrics {
+            background-color: var(--white);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .metric-card {
+            background-color: var(--white);
+            padding: 40px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+            border-top: 4px solid var(--secondary-color);
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .metric-icon {
+            width: 70px;
+            height: 70px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+        }
+        
+        .metric-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .metric-label {
+            color: var(--light-text);
+            font-size: 1.1rem;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            text-align: center;
+        }
+        
+        .cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .cta-description {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: white;
+            color: var(--primary-color);
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--light-color);
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .footer-text {
+            opacity: 0.8;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .section {
+                padding: 60px 0;
+            }
+            
+            .page-title {
+                font-size: 2.8rem;
+            }
+            
+            .header-stats {
+                gap: 30px;
+            }
+            
+            .wins-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .page-title {
+                font-size: 2.2rem;
+            }
+            
+            .page-description {
+                font-size: 1.1rem;
+            }
+            
+            .header-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .phase-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .phase-info {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-top: 15px;
+            }
+            
+            .phase-priority {
+                margin-top: 10px;
+            }
+            
+            .phase-step {
+                flex-direction: column;
+            }
+            
+            .step-icon {
+                margin-bottom: 15px;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .section {
+                padding: 40px 0;
+            }
+            
+            .win-card, .phase-step {
+                flex-direction: column;
+            }
+            
+            .win-icon, .step-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</body>
+</html>

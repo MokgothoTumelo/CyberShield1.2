@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hydroponics Planner - Virtual Farming</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-light: #4caf50;
+            --primary-dark: #1b5e20;
+            --secondary: #00695c;
+            --accent: #ff6f00;
+            --text: #212121;
+            --text-light: #757575;
+            --background: #f8fbf8;
+            --surface: #ffffff;
+            --error: #d32f2f;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.12);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary: #4caf50;
+            --primary-light: #66bb6a;
+            --primary-dark: #388e3c;
+            --secondary: #00796b;
+            --accent: #ff8f00;
+            --text: #f5f5f5;
+            --text-light: #bdbdbd;
+            --background: #121212;
+            --surface: #1e1e1e;
+            --error: #f44336;
+            --border: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.35);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--background);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header Styles */
+        .navbar {
+            background-color: var(--surface);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.35rem;
+        }
+
+        .logo-icon {
+            width: 2rem;
+            height: 2rem;
+            margin-right: 0.5rem;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .mobile-menu {
+            display: none;
+            background-color: var(--surface);
+            padding: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 0.75rem 0;
+            color: var(--text);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* Main Layout */
+        .main-content {
+            display: flex;
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .calculator-section {
+            flex: 1;
+        }
+
+        .results-section {
+            flex: 1;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-icon {
+            background-color: var(--primary-light);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.25rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: var(--surface);
+            color: var(--text);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+        }
+
+        .form-error {
+            color: var(--error);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-secondary {
+            background-color: #f5f5f5;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        .btn-icon {
+            margin-right: 0.5rem;
+        }
+
+        /* Results Styles */
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .result-item {
+            background-color: var(--surface);
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .result-title {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-label {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab {
+            padding: 0.875rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-light);
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        /* Schedule Styles */
+        .schedule-day {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .schedule-day:last-child {
+            border-bottom: none;
+        }
+        
+        .schedule-task {
+            margin-left: 1.5rem;
+            padding: 0.25rem 0;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            color: var(--primary);
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--surface);
+            color: var(--text);
+            text-align: center;
+            border-radius: var(--radius);
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-left: 1rem;
+            transition: var(--transition);
+        }
+
+        /* Favorites */
+        .favorites-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .favorite-item {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            height: 200px;
+            margin-top: 1rem;
+        }
+
+        /* Print Styles */
+        @media print {
+            .navbar, .hero, .btn, .theme-toggle, .favorites-section {
+                display: none !important;
+            }
+            
+            .card {
+                box-shadow: none;
+                border: 1px solid #000;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .main-content {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: block;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-bottom: 1px solid var(--border);
+                border-left: 3px solid transparent;
+            }
+            
+            .tab.active {
+                border-left-color: var(--primary);
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <script>
+(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="fqw8ak8MUkge77wso_bEH";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+</script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">
+                <i class="fas fa-seedling logo-icon"></i>
+                <span class="logo-text">Virtual Farming</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="home.html" class="nav-link">Home</a></li>
+                <li><a href="research.html" class="nav-link">Research</a></li>
+                <li><a href="recommendations.html" class="nav-link">Recommendations</a></li>
+                <li><a href="hydroponics-planner.html" class="nav-link">Hydroponics Planner</a></li>
+                <li><a href="about.html" class="nav-link">About Us</a></li>
+                <li>
+                    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobile-menu-btn"><span>☰</span></button>
+        </div>
+        <div class="mobile-menu hidden" id="mobile-menu">
+            <ul class="mobile-nav-links">
+                <li><a href="home.html" class="mobile-nav-link">Home</a></li>
+                <li><a href="research.html" class="mobile-nav-link">Research Findings</a></li>
+                <li><a href="recommendations.html" class="mobile-nav-link">Recommendations</a></li>
+                <li><a href="hydroponics-planner.html" class="mobile-nav-link">Hydroponics Planner</a></li>
+                <li><a href="about.html" class="mobile-nav-link">About Us</a></li>
+                <li>
+                    <button class="theme-toggle mobile-nav-link" id="mobile-theme-toggle" style="background: none; border: none; width: 100%; text-align: left;">
+                        <i class="fas fa-moon"></i> Toggle Dark Mode
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Advanced Hydroponics Planner</h1>
+            <p>Design, calculate, and optimize your hydroponic system for maximum yield and efficiency</p>
+        </div>
+    </section>
+
+    <main class="container">
+        <div class="main-content">
+            <section class="calculator-section">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h2>Hydroponics Calculator</h2>
+                    </div>
+                    
+                    <div class="tabs">
+                        <button class="tab active" data-tab="system">System Design</button>
+                        <button class="tab" data-tab="nutrients">Nutrients</button>
+                        <button class="tab" data-tab="yield">Yield Estimate</button>
+                        <button class="tab" data-tab="cost">Cost Analysis</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="system-tab">
+                        <form id="system-form">
+                            <div class="form-group">
+                                <label for="garden-length" class="form-label">
+                                    Length (m)
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext">The length of your growing area in meters</span>
+                                    </span>
+                                </label>
+                                <input type="number" id="garden-length" class="form-input" placeholder="e.g., 4" min="0.1" step="0.1">
+                                <div class="form-error" id="length-error">Please enter a valid length</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="garden-width" class="form-label">
+                                    Width (m)
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span class="tooltiptext">The width of your growing area in meters</span>
+                                    </span>
+                                </label>
+                                <input type="number" id="garden-width" class="form-input" placeholder="e.g., 2" min="0.1" step="0.1">
+                                <div class="form-error" id="width-error">Please enter a valid width</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="system-type" class="form-label">System Type</label>
+                                <select id="system-type" class="form-input">
+                                    <option value="nft">NFT (Nutrient Film Technique)</option>
+                                    <option value="dwc">DWC (Deep Water Culture)</option>
+                                    <option value="ebb">Ebb & Flow</option>
+                                    <option value="drip">Drip System</option>
+                                    <option value="aeroponics">Aeroponics</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="plant-type" class="form-label">Crop Type</label>
+                                <select id="plant-type" class="form-input">
+                                    <option value="tomato">Tomato</option>
+                                    <option value="lettuce">Lettuce</option>
+                                    <option value="pepper">Bell Pepper</option>
+                                    <option value="herbs">Herbs</option>
+                                    <option value="strawberry">Strawberry</option>
+                                    <option value="cucumber">Cucumber</option>
+                                    <option value="spinach">Spinach</option>
+                                    <option value="kale">Kale</option>
+                                </select>
+                            </div>
+                            <button type="button" id="calculate-btn" class="btn btn-primary">
+                                <i class="fas fa-calculator btn-icon"></i> Calculate
+                            </button>
+                            <button type="button" id="save-favorite-btn" class="btn btn-secondary" style="margin-left: 10px;">
+                                <i class="fas fa-star btn-icon"></i> Save as Favorite
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="tab-content" id="nutrients-tab">
+                        <form id="nutrients-form">
+                            <div class="form-group">
+                                <label for="reservoir-volume" class="form-label">Reservoir Volume (L)</label>
+                                <input type="number" id="reservoir-volume" class="form-input" placeholder="e.g., 50" min="1" step="1">
+                                <div class="form-error" id="volume-error">Please enter a valid volume</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="nutrient-brand" class="form-label">Nutrient Brand</label>
+                                <select id="nutrient-brand" class="form-input">
+                                    <option value="general">General Hydroponics</option>
+                                    <option value="advanced">Advanced Nutrients</option>
+                                    <option value="botanicare">Botanicare</option>
+                                    <option value="foxfarm">FoxFarm</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="growth-stage" class="form-label">Growth Stage</label>
+                                <select id="growth-stage" class="form-input">
+                                    <option value="seedling">Seedling</option>
+                                    <option value="vegetative">Vegetative</option>
+                                    <option value="flowering">Flowering</option>
+                                    <option value="fruiting">Fruiting</option>
+                                </select>
+                            </div>
+                            <button type="button" id="calculate-nutrients-btn" class="btn btn-primary">
+                                <i class="fas fa-flask btn-icon"></i> Calculate Nutrients
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="tab-content" id="yield-tab">
+                        <form id="yield-form">
+                            <div class="form-group">
+                                <label for="yield-plant-type" class="form-label">Crop Type</label>
+                                <select id="yield-plant-type" class="form-input">
+                                    <option value="tomato">Tomato</option>
+                                    <option value="lettuce">Lettuce</option>
+                                    <option value="pepper">Bell Pepper</option>
+                                    <option value="herbs">Herbs</option>
+                                    <option value="strawberry">Strawberry</option>
+                                    <option value="cucumber">Cucumber</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="plant-count" class="form-label">Number of Plants</label>
+                                <input type="number" id="plant-count" class="form-input" placeholder="e.g., 24" min="1" step="1">
+                                <div class="form-error" id="count-error">Please enter a valid plant count</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="growth-duration" class="form-label">Growth Duration (weeks)</label>
+                                <input type="number" id="growth-duration" class="form-input" placeholder="e.g., 8" min="1" step="1">
+                                <div class="form-error" id="duration-error">Please enter a valid duration</div>
+                            </div>
+                            <button type="button" id="calculate-yield-btn" class="btn btn-primary">
+                                <i class="fas fa-chart-line btn-icon"></i> Estimate Yield
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="tab-content" id="cost-tab">
+                        <form id="cost-form">
+                            <div class="form-group">
+                                <label for="cost-plant-type" class="form-label">Crop Type</label>
+                                <select id="cost-plant-type" class="form-input">
+                                    <option value="tomato">Tomato</option>
+                                    <option value="lettuce">Lettuce</option>
+                                    <option value="pepper">Bell Pepper</option>
+                                    <option value="herbs">Herbs</option>
+                                    <option value="strawberry">Strawberry</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cost-plant-count" class="form-label">Number of Plants</label>
+                                <input type="number" id="cost-plant-count" class="form-input" placeholder="e.g., 24" min="1" step="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="electricity-cost" class="form-label">Electricity Cost (R/kWh)</label>
+                                <input type="number" id="electricity-cost" class="form-input" placeholder="e.g., 2.50" min="0.01" step="0.01" value="2.50">
+                            </div>
+                            <div class="form-group">
+                                <label for="nutrient-cost" class="form-label">Nutrient Cost (R/L)</label>
+                                <input type="number" id="nutrient-cost" class="form-input" placeholder="e.g., 8.00" min="0.01" step="0.01" value="8.00">
+                            </div>
+                            <button type="button" id="calculate-cost-btn" class="btn btn-primary">
+                                <i class="fas fa-dollar-sign btn-icon"></i> Calculate Costs
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="favorites-section" id="favorites-section">
+                        <h3>Saved Setups</h3>
+                        <div id="favorites-list"></div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <h2>Quick Tips</h2>
+                    </div>
+                    <ul style="padding-left: 1.5rem;">
+                        <li>Maintain pH between 5.5 and 6.5 for optimal nutrient uptake</li>
+                        <li>Check EC levels regularly to monitor nutrient strength</li>
+                        <li>Ensure proper aeration of your nutrient solution</li>
+                        <li>Keep reservoir temperatures between 18-22°C (65-72°F)</li>
+                        <li>Monitor plants daily for signs of nutrient deficiencies</li>
+                        <li>Clean your system between crops to prevent disease</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h2>Equipment Checklist</h2>
+                    </div>
+                    <div id="equipment-list">
+                        <p>Calculate your system to see required equipment</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="results-section">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h2>Calculation Results</h2>
+                        <button id="export-btn" class="btn btn-secondary" style="margin-left: auto;">
+                            <i class="fas fa-download btn-icon"></i> Export
+                        </button>
+                        <button id="print-btn" class="btn btn-secondary" style="margin-left: 10px;">
+                            <i class="fas fa-print btn-icon"></i> Print
+                        </button>
+                    </div>
+                    <div id="results-container">
+                        <div class="result-grid">
+                            <div class="result-item">
+                                <h3 class="result-title">Total Area</h3>
+                                <p class="result-value" id="area-value">-</p>
+                                <p class="result-label">m²</p>
+                            </div>
+                            <div class="result-item">
+                                <h3 class="result-title">Plant Capacity</h3>
+                                <p class="result-value" id="plants-value">-</p>
+                                <p class="result-label" id="plants-type">Plants</p>
+                            </div>
+                            <div class="result-item">
+                                <h3 class="result-title">Reservoir Size</h3>
+                                <p class="result-value" id="reservoir-size">-</p>
+                                <p class="result-label">Liters</p>
+                            </div>
+                            <div class="result-item">
+                                <h3 class="result-title">Estimated Yield</h3>
+                                <p class="result-value" id="yield-value">-</p>
+                                <p class="result-label" id="yield-unit">kg</p>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <canvas id="yield-chart"></canvas>
+                        </div>
+                        
+                        <div style="margin-top: 1.5rem;">
+                            <h3 style="margin-bottom: 0.75rem;">Nutrient Requirements</h3>
+                            <div class="result-item">
+                                <p class="result-label" id="nutrient-amount">Enter values to calculate nutrient requirements</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 1.5rem;">
+                            <h3 style="margin-bottom: 0.75rem;">Cost Analysis</h3>
+                            <div class="result-item">
+                                <p class="result-label" id="cost-analysis">Enter values to see cost analysis</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h2>Weekly Schedule</h2>
+                    </div>
+                    <div id="weekly-schedule">
+                        <p class="result-label">Enter your system details to generate a weekly maintenance schedule.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h2>Seasonal Planting Guide</h2>
+                    </div>
+                    <div id="seasonal-guide">
+                        <p class="result-label">Select a crop to see optimal planting times</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 Cyber Shield | Hydroponic Innovation for a Sustainable Future</p>
+            <p>This tool is for planning purposes only. Actual results may vary based on environmental conditions and growing practices.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize variables
+        let currentTheme = 'light';
+        let favorites = JSON.parse(localStorage.getItem('hydroponicsFavorites')) || [];
+        let yieldChart = null;
+
+        // Mobile menu functionality
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+            
+            // Update the menu icon
+            this.querySelector('span').textContent = menu.classList.contains('hidden') ? '☰' : '✕';
+        });
+
+        // Theme toggle functionality
+        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+        document.getElementById('mobile-theme-toggle').addEventListener('click', toggleTheme);
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', currentTheme);
+            localStorage.setItem('hydroponicsTheme', currentTheme);
+            
+            // Update theme toggle icon
+            const icon = document.querySelector('#theme-toggle i');
+            icon.className = currentTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('hydroponicsTheme');
+        if (savedTheme) {
+            currentTheme = savedTheme;
+            document.body.setAttribute('data-theme', currentTheme);
+            const icon = document.querySelector('#theme-toggle i');
+            icon.className = currentTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                // Show the corresponding tab content
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+
+        // Crop configuration data - updated with ZAR prices
+        const cropData = {
+            tomato: { 
+                spacing: 0.5, 
+                waterPerPlant: 2, 
+                avgYield: 3.5, 
+                yieldUnit: "kg per plant",
+                ecRange: "2.0-3.5",
+                harvestTime: 8,
+                nutrientDosage: 5,
+                costPerPlant: 45, // ZAR
+                electricityUsage: 0.8,
+                marketPrice: 25, // ZAR per kg
+                seasonal: ["Spring", "Summer", "Fall"]
+            },
+            lettuce: { 
+                spacing: 0.3, 
+                waterPerPlant: 0.5, 
+                avgYield: 0.3, 
+                yieldUnit: "heads per plant",
+                ecRange: "0.8-1.5",
+                harvestTime: 6,
+                nutrientDosage: 4,
+                costPerPlant: 22, // ZAR
+                electricityUsage: 0.5,
+                marketPrice: 18, // ZAR per head
+                seasonal: ["Year-round"]
+            },
+            pepper: { 
+                spacing: 0.4, 
+                waterPerPlant: 1.5, 
+                avgYield: 1.8, 
+                yieldUnit: "kg per plant",
+                ecRange: "1.5-2.5",
+                harvestTime: 9,
+                nutrientDosage: 5,
+                costPerPlant: 36, // ZAR
+                electricityUsage: 0.7,
+                marketPrice: 35, // ZAR per kg
+                seasonal: ["Spring", "Summer"]
+            },
+            herbs: { 
+                spacing: 0.2, 
+                waterPerPlant: 0.3, 
+                avgYield: 0.4, 
+                yieldUnit: "kg per plant",
+                ecRange: "1.0-1.8",
+                harvestTime: 4,
+                nutrientDosage: 3,
+                costPerPlant: 15, // ZAR
+                electricityUsage: 0.4,
+                marketPrice: 120, // ZAR per kg
+                seasonal: ["Year-round"]
+            },
+            strawberry: { 
+                spacing: 0.25, 
+                waterPerPlant: 0.4, 
+                avgYield: 0.5, 
+                yieldUnit: "kg per plant",
+                ecRange: "1.2-2.0",
+                harvestTime: 10,
+                nutrientDosage: 4,
+                costPerPlant: 28, // ZAR
+                electricityUsage: 0.6,
+                marketPrice: 80, // ZAR per kg
+                seasonal: ["Spring", "Summer"]
+            },
+            cucumber: { 
+                spacing: 0.6, 
+                waterPerPlant: 2.5, 
+                avgYield: 2.5, 
+                yieldUnit: "kg per plant",
+                ecRange: "1.8-2.8",
+                harvestTime: 7,
+                nutrientDosage: 6,
+                costPerPlant: 40, // ZAR
+                electricityUsage: 0.9,
+                marketPrice: 20, // ZAR per kg
+                seasonal: ["Spring", "Summer"]
+            },
+            spinach: { 
+                spacing: 0.25, 
+                waterPerPlant: 0.4, 
+                avgYield: 0.3, 
+                yieldUnit: "kg per plant",
+                ecRange: "1.2-2.0",
+                harvestTime: 5,
+                nutrientDosage: 3.5,
+                costPerPlant: 18, // ZAR
+                electricityUsage: 0.5,
+                marketPrice: 30, // ZAR per kg
+                seasonal: ["Spring", "Fall", "Winter"]
+            },
+            kale: { 
+                spacing: 0.35, 
+                waterPerPlant: 0.6, 
+                avgYield: 0.6, 
+                yieldUnit: "kg per plant",
+                ecRange: "1.5-2.5",
+                harvestTime: 7,
+                nutrientDosage: 4,
+                costPerPlant: 24, // ZAR
+                electricityUsage: 0.6,
+                marketPrice: 40, // ZAR per kg
+                seasonal: ["Year-round"]
+            }
+        };
+
+        // System equipment data
+        const equipmentData = {
+            nft: ["NFT Channels", "Reservoir", "Water Pump", "Air Pump & Stone", "PVC Pipes", "Net Pots", "Growing Medium", "pH & EC Meters", "Timer"],
+            dwc: ["Reservoir", "Air Pump", "Air Stones", "Net Pots", "Lid with Holes", "Growing Medium", "pH & EC Meters"],
+            ebb: ["Grow Tray", "Reservoir", "Water Pump", "Overflow Fitting", "Timer", "Net Pots", "Growing Medium", "pH & EC Meters"],
+            drip: ["Reservoir", "Water Pump", "Drip Emitters", "Timer", "PVC Pipes/Tubing", "Net Pots", "Growing Medium", "pH & EC Meters"],
+            aeroponics: ["High-pressure Pump", "Nozzles", "Reservoir", "Timer", "Enclosed Growing Chamber", "Net Pots", "Growing Medium", "pH & EC Meters"]
+        };
+
+        // Form validation function
+        function validateForm(inputId, errorId) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+            
+            if (!input.value || isNaN(input.value) || parseFloat(input.value) <= 0) {
+                error.style.display = 'block';
+                input.style.borderColor = 'var(--error)';
+                return false;
+            } else {
+                error.style.display = 'none';
+                input.style.borderColor = 'var(--border)';
+                return true;
+            }
+        }
+
+        // System Design Calculation
+        document.getElementById('calculate-btn').addEventListener('click', function() {
+            // Validate inputs
+            const lengthValid = validateForm('garden-length', 'length-error');
+            const widthValid = validateForm('garden-width', 'width-error');
+            
+            if (!lengthValid || !widthValid) return;
+
+            const length = parseFloat(document.getElementById('garden-length').value);
+            const width = parseFloat(document.getElementById('garden-width').value);
+            const systemType = document.getElementById('system-type').value;
+            const crop = document.getElementById('plant-type').value;
+
+            const area = length * width;
+            const cropInfo = cropData[crop];
+            const numPlants = Math.floor(area / cropInfo.spacing);
+            
+            // Calculate reservoir size based on system type
+            let reservoirSize;
+            switch(systemType) {
+                case 'nft':
+                    reservoirSize = numPlants * 2;
+                    break;
+                case 'dwc':
+                    reservoirSize = numPlants * 5;
+                    break;
+                case 'ebb':
+                    reservoirSize = numPlants * 3;
+                    break;
+                case 'drip':
+                    reservoirSize = numPlants * 4;
+                    break;
+                case 'aeroponics':
+                    reservoirSize = numPlants * 1;
+                    break;
+                default:
+                    reservoirSize = numPlants * 3;
+            }
+
+            // Calculate nutrient amount
+            const nutrientAmount = reservoirSize * cropInfo.nutrientDosage;
+
+            // Update results
+            document.getElementById('area-value').textContent = area.toFixed(2);
+            document.getElementById('plants-value').textContent = numPlants;
+            document.getElementById('plants-type').textContent = `${crop.charAt(0).toUpperCase() + crop.slice(1)} Plants`;
+            document.getElementById('reservoir-size').textContent = Math.round(reservoirSize);
+            document.getElementById('yield-value').textContent = (numPlants * cropInfo.avgYield).toFixed(1);
+            document.getElementById('yield-unit').textContent = cropInfo.yieldUnit;
+            document.getElementById('nutrient-amount').innerHTML = `
+                <strong>${nutrientAmount}ml</strong> of nutrient concentrate needed<br>
+                Target EC: ${cropInfo.ecRange} mS/cm<br>
+                Maintain pH between 5.5-6.5
+            `;
+
+            // Generate weekly schedule
+            generateWeeklySchedule(crop, numPlants, reservoirSize);
+            
+            // Generate equipment list
+            generateEquipmentList(systemType, numPlants);
+            
+            // Generate seasonal guide
+            generateSeasonalGuide(crop);
+            
+            // Update yield chart
+            updateYieldChart(crop, numPlants);
+            
+            // Calculate and display costs
+            calculateCosts(crop, numPlants);
+        });
+
+        // Nutrient Calculation
+        document.getElementById('calculate-nutrients-btn').addEventListener('click', function() {
+            const reservoirVolume = parseFloat(document.getElementById('reservoir-volume').value);
+            const growthStage = document.getElementById('growth-stage').value;
+            const crop = document.getElementById('plant-type').value || 'tomato';
+
+            if (!validateForm('reservoir-volume', 'volume-error')) return;
+
+            const cropInfo = cropData[crop];
+            
+            // Adjust dosage based on growth stage
+            let dosageMultiplier = 1;
+            if (growthStage === 'seedling') dosageMultiplier = 0.5;
+            if (growthStage === 'vegetative') dosageMultiplier = 0.8;
+            if (growthStage === 'flowering') dosageMultiplier = 1.2;
+            if (growthStage === 'fruiting') dosageMultiplier = 1.5;
+            
+            const nutrientAmount = reservoirVolume * cropInfo.nutrientDosage * dosageMultiplier;
+
+            document.getElementById('nutrient-amount').innerHTML = `
+                <strong>${nutrientAmount.toFixed(1)}ml</strong> of nutrient concentrate needed<br>
+                Target EC: ${cropInfo.ecRange} mS/cm<br>
+                Maintain pH between 5.5-6.5
+            `;
+        });
+
+        // Yield Calculation
+        document.getElementById('calculate-yield-btn').addEventListener('click', function() {
+            const plantCount = parseInt(document.getElementById('plant-count').value);
+            const crop = document.getElementById('yield-plant-type').value;
+            const growthDuration = parseInt(document.getElementById('growth-duration').value);
+
+            if (!validateForm('plant-count', 'count-error') || !validateForm('growth-duration', 'duration-error')) return;
+
+            const cropInfo = cropData[crop];
+            const totalYield = plantCount * cropInfo.avgYield;
+            
+            document.getElementById('yield-value').textContent = totalYield.toFixed(1);
+            document.getElementById('yield-unit').textContent = cropInfo.yieldUnit;
+            document.getElementById('plants-value').textContent = plantCount;
+            document.getElementById('plants-type').textContent = `${crop.charAt(0).toUpperCase() + crop.slice(1)} Plants`;
+            
+            // Update yield chart
+            updateYieldChart(crop, plantCount);
+        });
+
+        // Cost Calculation
+        document.getElementById('calculate-cost-btn').addEventListener('click', function() {
+            const plantCount = parseInt(document.getElementById('cost-plant-count').value);
+            const crop = document.getElementById('cost-plant-type').value;
+            const electricityCost = parseFloat(document.getElementById('electricity-cost').value);
+            const nutrientCost = parseFloat(document.getElementById('nutrient-cost').value);
+            
+            calculateCosts(crop, plantCount, electricityCost, nutrientCost);
+        });
+
+        // Calculate costs function - Updated for ZAR
+        function calculateCosts(crop, plantCount, electricityCost = 2.50, nutrientCost = 8.00) {
+            const cropInfo = cropData[crop];
+            
+            // Initial setup costs
+            const setupCost = plantCount * cropInfo.costPerPlant;
+            
+            // Monthly operational costs
+            const monthlyElectricity = cropInfo.electricityUsage * plantCount * electricityCost * 30;
+            const monthlyNutrients = cropInfo.nutrientDosage * plantCount * nutrientCost / 10;
+            const monthlyWater = plantCount * cropInfo.waterPerPlant * 0.05 * 30; // Assuming R0.05 per liter
+            
+            const monthlyTotal = monthlyElectricity + monthlyNutrients + monthlyWater;
+            const annualTotal = monthlyTotal * 12;
+            
+            // Potential revenue (using South African market prices)
+            let potentialRevenue;
+            if (cropInfo.yieldUnit.includes('kg')) {
+                potentialRevenue = plantCount * cropInfo.avgYield * cropInfo.marketPrice;
+            } else {
+                // For lettuce (heads)
+                potentialRevenue = plantCount * cropInfo.avgYield * cropInfo.marketPrice;
+            }
+            
+            const potentialProfit = potentialRevenue - annualTotal - setupCost;
+            
+            document.getElementById('cost-analysis').innerHTML = `
+                <strong>Setup Cost:</strong> R${setupCost.toFixed(2)}<br>
+                <strong>Monthly Operating Cost:</strong> R${monthlyTotal.toFixed(2)}<br>
+                <strong>Annual Operating Cost:</strong> R${annualTotal.toFixed(2)}<br>
+                <strong>Potential Annual Revenue:</strong> R${potentialRevenue.toFixed(2)}<br>
+                <strong>Potential Annual Profit:</strong> R${potentialProfit.toFixed(2)}<br>
+                <em>Note: Revenue estimates based on average South African market prices</em>
+            `;
+        }
+
+        // Generate weekly schedule
+        function generateWeeklySchedule(crop, numPlants, reservoirSize) {
+            const cropInfo = cropData[crop];
+            const weeklyWater = numPlants * cropInfo.waterPerPlant * 7;
+            const weeklyNutrients = weeklyWater * (cropInfo.nutrientDosage / 1000); // Convert ml to L
+            
+            const scheduleHTML = `
+                <div class="schedule-day">
+                    <strong>Monday:</strong>
+                    <div class="schedule-task">Check pH and EC levels</div>
+                    <div class="schedule-task">Top up with ${Math.round(weeklyWater/7)}L water if needed</div>
+                </div>
+                <div class="schedule-day">
+                    <strong>Tuesday:</strong>
+                    <div class="schedule-task">Inspect plants for pests or diseases</div>
+                </div>
+                <div class="schedule-day">
+                    <strong>Wednesday:</strong>
+                    <div class="schedule-task">Check pH and EC levels</div>
+                    <div class="schedule-task">Add ${Math.round(weeklyNutrients/2)}ml nutrients if EC is low</div>
+                </div>
+                <div class="schedule-day">
+                    <strong>Thursday:</strong>
+                    <div class="schedule-task">Prune and train plants as needed</div>
+                </div>
+                <div class="schedule-day">
+                    <strong>Friday:</strong>
+                    <div class="schedule-task">Check pH and EC levels</div>
+                    <div class="schedule-task">Top up with ${Math.round(weeklyWater/7)}L water</div>
+                </div>
+                <div class="schedule-day">
+                    <strong>Saturday:</strong>
+                    <div class="schedule-task">System maintenance check</div>
+                    <div class="schedule-task">Clean filters and check pumps</div>
+                </div>
+                <div class="schedule-day">
+                    <strong>Sunday:</strong>
+                    <div class="schedule-task">Full reservoir change (every 2 weeks)</div>
+                </div>
+                <div style="margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--border);">
+                    <p><strong>Weekly Totals:</strong> ${weeklyWater}L water, ${weeklyNutrients.toFixed(1)}ml nutrients</p>
+                </div>
+            `;
+            
+            document.getElementById('weekly-schedule').innerHTML = scheduleHTML;
+        }
+
+        // Generate equipment list - Updated for ZAR
+        function generateEquipmentList(systemType, numPlants) {
+            const equipment = equipmentData[systemType] || [];
+            let equipmentHTML = '<ul style="padding-left: 1.5rem;">';
+            
+            equipment.forEach(item => {
+                equipmentHTML += `<li>${item}</li>`;
+            });
+            
+            equipmentHTML += `</ul><p><strong>Estimated initial investment:</strong> R${(numPlants * 270).toFixed(2)} - R${(numPlants * 540).toFixed(2)}</p>`;
+            
+            document.getElementById('equipment-list').innerHTML = equipmentHTML;
+        }
+
+        // Generate seasonal guide
+        function generateSeasonalGuide(crop) {
+            const cropInfo = cropData[crop];
+            const seasons = cropInfo.seasonal.join(", ");
+            
+            document.getElementById('seasonal-guide').innerHTML = `
+                <p><strong>Optimal growing seasons:</strong> ${seasons}</p>
+                <p><strong>Time to harvest:</strong> ${cropInfo.harvestTime} weeks</p>
+                <p><strong>Ideal temperature:</strong> 18-26°C (65-78°F)</p>
+                <p><strong>Light requirements:</strong> 12-16 hours daily</p>
+            `;
+        }
+
+        // Update yield chart
+        function updateYieldChart(crop, plantCount) {
+            const cropInfo = cropData[crop];
+            const ctx = document.getElementById('yield-chart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (yieldChart) {
+                yieldChart.destroy();
+            }
+            
+            // Create new chart
+            yieldChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Week 2', 'Week 4', 'Week 6', 'Week 8', 'Harvest'],
+                    datasets: [{
+                        label: 'Estimated Growth',
+                        data: [
+                            plantCount * cropInfo.avgYield * 0.1,
+                            plantCount * cropInfo.avgYield * 0.3,
+                            plantCount * cropInfo.avgYield * 0.6,
+                            plantCount * cropInfo.avgYield * 0.85,
+                            plantCount * cropInfo.avgYield
+                        ],
+                        backgroundColor: 'rgba(76, 175, 80, 0.7)',
+                        borderColor: 'rgba(76, 175, 80, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Yield (' + cropInfo.yieldUnit + ')'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Save favorite setup
+        document.getElementById('save-favorite-btn').addEventListener('click', function() {
+            const length = document.getElementById('garden-length').value;
+            const width = document.getElementById('garden-width').value;
+            const systemType = document.getElementById('system-type').value;
+            const crop = document.getElementById('plant-type').value;
+            
+            if (!length || !width) {
+                alert('Please calculate a system first before saving as favorite.');
+                return;
+            }
+            
+            const favorite = {
+                id: Date.now(),
+                name: `${crop.charAt(0).toUpperCase() + crop.slice(1)} ${systemType.toUpperCase()} System`,
+                length: length,
+                width: width,
+                systemType: systemType,
+                crop: crop,
+                date: new Date().toLocaleDateString()
+            };
+            
+            favorites.push(favorite);
+            localStorage.setItem('hydroponicsFavorites', JSON.stringify(favorites));
+            updateFavoritesList();
+            alert('Setup saved to favorites!');
+        });
+
+        // Update favorites list
+        function updateFavoritesList() {
+            const favoritesList = document.getElementById('favorites-list');
+            
+            if (favorites.length === 0) {
+                favoritesList.innerHTML = '<p>No saved setups yet.</p>';
+                return;
+            }
+            
+            let html = '';
+            favorites.forEach(fav => {
+                html += `
+                    <div class="favorite-item">
+                        <div>
+                            <strong>${fav.name}</strong><br>
+                            <small>${fav.length}m × ${fav.width}m | Saved: ${fav.date}</small>
+                        </div>
+                        <div>
+                            <button class="btn btn-secondary" onclick="loadFavorite(${fav.id})">
+                                <i class="fas fa-upload"></i>
+                            </button>
+                            <button class="btn btn-secondary" onclick="deleteFavorite(${fav.id})" style="margin-left: 5px;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            favoritesList.innerHTML = html;
+        }
+
+        // Load favorite
+        window.loadFavorite = function(id) {
+            const favorite = favorites.find(fav => fav.id === id);
+            if (favorite) {
+                document.getElementById('garden-length').value = favorite.length;
+                document.getElementById('garden-width').value = favorite.width;
+                document.getElementById('system-type').value = favorite.systemType;
+                document.getElementById('plant-type').value = favorite.crop;
+                
+                // Trigger calculation
+                document.getElementById('calculate-btn').click();
+                
+                alert('Favorite loaded successfully!');
+            }
+        };
+
+        // Delete favorite
+        window.deleteFavorite = function(id) {
+            if (confirm('Are you sure you want to delete this saved setup?')) {
+                favorites = favorites.filter(fav => fav.id !== id);
+                localStorage.setItem('hydroponicsFavorites', JSON.stringify(favorites));
+                updateFavoritesList();
+            }
+        };
+
+        // Export functionality
+        document.getElementById('export-btn').addEventListener('click', function() {
+            const area = document.getElementById('area-value').textContent;
+            const plants = document.getElementById('plants-value').textContent;
+            const reservoir = document.getElementById('reservoir-size').textContent;
+            const yieldValue = document.getElementById('yield-value').textContent;
+            const yieldUnit = document.getElementById('yield-unit').textContent;
+            
+            if (area === '-') {
+                alert('Please calculate a system first before exporting.');
+                return;
+            }
+            
+            const data = `
+Hydroponics System Plan
+=======================
+
+System Details:
+- Total Area: ${area} m²
+- Plant Capacity: ${plants} plants
+- Reservoir Size: ${reservoir} liters
+- Estimated Yield: ${yieldValue} ${yieldUnit}
+
+Generated on: ${new Date().toLocaleDateString()}
+
+Notes:
+- Maintain pH between 5.5-6.5
+- Check EC levels regularly
+- Monitor plant health daily
+            `;
+            
+            const blob = new Blob([data], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'hydroponics-plan.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // Print functionality
+        document.getElementById('print-btn').addEventListener('click', function() {
+            window.print();
+        });
+
+        // Initialize favorites list
+        updateFavoritesList();
+
+        // Add loading state to buttons
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const originalText = this.innerHTML;
+                this.innerHTML = '<div class="loading"></div> Calculating...';
+                
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                }, 1000);
+            });
+        });
+
+        // Add real-time validation
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('blur', function() {
+                const id = this.id;
+                if (id === 'garden-length') validateForm('garden-length', 'length-error');
+                if (id === 'garden-width') validateForm('garden-width', 'width-error');
+                if (id === 'reservoir-volume') validateForm('reservoir-volume', 'volume-error');
+                if (id === 'plant-count') validateForm('plant-count', 'count-error');
+                if (id === 'growth-duration') validateForm('growth-duration', 'duration-error');
+            });
+        });
+
+        // Initialize with sample data for demonstration
+        window.addEventListener('load', function() {
+            document.getElementById('garden-length').value = 4;
+            document.getElementById('garden-width').value = 2;
+            document.getElementById('plant-count').value = 24;
+            document.getElementById('cost-plant-count').value = 24;
+        });
+    </script>
+</body>
+</html>

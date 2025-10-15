@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Cyber Shield</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 4rem 0;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            display: none;
+            background: #2c3e50;
+            padding: 1rem 0;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-description {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Team Filter Styles */
+        .team-filter {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 0;
+        }
+
+        .filter-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .filter-header h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: white;
+            color: #667eea;
+            border-color: white;
+        }
+
+        .active-filter-indicator {
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Team Section */
+        .team-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .grid-cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-md-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .team-member {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #e1e5e9;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .team-member::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .member-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            border: 4px solid #f8f9fa;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .member-info {
+            position: relative;
+        }
+
+        .member-name {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+        }
+
+        .member-role {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .role-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .role-tag.programmer {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .role-tag.research {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .role-tag.documentation {
+            background: #e8f5e8;
+            color: #388e3c;
+        }
+
+        .role-tag.presenter {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .role-tag.mathematics {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .member-contributions {
+            text-align: left;
+            margin-top: 1rem;
+        }
+
+        .member-contributions li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .member-contributions li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+        }
+
+        .space-y-2 > * + * {
+            margin-top: 0.5rem;
+        }
+
+        /* Integration Section */
+        .integration {
+            background: #f8f9fa;
+        }
+
+        .integration-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .grid-md-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .integration-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #e1e5e9;
+        }
+
+        .integration-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .integration-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            color: #667eea;
+        }
+
+        .integration-card-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        /* Project Info */
+        .project-info {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .text-2xl {
+            font-size: 1.5rem;
+        }
+
+        .font-bold {
+            font-weight: bold;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .info-item {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .footer-text {
+            font-size: 1.1rem;
+        }
+
+        /* Animation for filter changes */
+        .team-member.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+            display: none; /* Changed from position: absolute to display: none */
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .team-grid.grid-md-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .integration-grid.grid-md-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .mobile-menu.active {
+                display: block;
+            }
+            
+            .filter-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .filter-btn {
+                width: 200px;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-grid.grid-md-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .integration-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .integration-grid.grid-md-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-member {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">
+                <i class="fas fa-seedling logo-icon"></i>
+                <span class="logo-text">Cyber Shield</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="home.html" class="nav-link">Home</a></li>
+                <li><a href="research.html" class="nav-link">Research</a></li>
+                <li><a href="recommendations.html" class="nav-link">Recommendations</a></li>
+                <li><a href="hydroponics-planner.html" class="nav-link">Hydroponics Planner</a></li>
+                <li><a href="about.html" class="nav-link active">About Us</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobile-menu-btn"><span>☰</span></button>
+        </div>
+        <div class="mobile-menu" id="mobile-menu">
+            <ul class="mobile-nav-links">
+                <li><a href="home.html" class="mobile-nav-link">Home</a></li>
+                <li><a href="research.html" class="mobile-nav-link">Research</a></li>
+                <li><a href="recommendations.html" class="mobile-nav-link">Recommendations</a></li>
+                <li><a href="hydroponics-planner.html" class="mobile-nav-link">Hydroponics Planner</a></li>
+                <li><a href="about.html" class="mobile-nav-link active">About Us</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="page-header section" id="aboutus">
+            <div class="container">
+                <h1 class="page-title">About Our Team</h1>
+                <p class="page-description">
+                    We are a passionate team of Cyber Shield members, working together to build 
+                    innovative solutions through programming, research, documentation, and collaboration.
+                </p>
+            </div>
+        </section>
+
+        <!-- Team Filter Section -->
+        <section class="team-filter section">
+            <div class="container">
+                <div class="filter-header">
+                    <h2>Find Team Members</h2>
+                    <p>Filter by role to see specific contributions</p>
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Members</button>
+                    <button class="filter-btn" data-filter="programmer">Programmers</button>
+                    <button class="filter-btn" data-filter="research">Researchers</button>
+                    <button class="filter-btn" data-filter="documentation">Documentation</button>
+                    <button class="filter-btn" data-filter="presenter">Presenters</button>
+                    <button class="filter-btn" data-filter="mathematics">Mathematics</button>
+                </div>
+                <div class="active-filter-indicator">
+                    <span id="current-filter">Showing: All Members</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="team section">
+            <div class="container">
+                <h2 class="team-title">Team Members</h2>
+                <div class="team-grid grid-cols-2 grid-md-3" id="team-grid">
+                    <!-- Programmer -->
+                    <div class="team-member" data-roles="programmer">
+                        <div class="member-photo">
+                            <div class="photo-placeholder">TM</div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Mokgotho T</h3>
+                            <p class="member-role">Student No: 240402386<br><span class="role-tag programmer">Programmer</span></p>
+                            <p><strong>Contributions:</strong></p>
+                            <ul class="member-contributions space-y-2">
+                                <li>Developed core system functionalities</li>
+                                <li>Worked on coding and technical integration</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Programmer -->
+                    <div class="team-member" data-roles="programmer">
+                        <div class="member-photo">
+                            <div class="photo-placeholder">PM</div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Poto M</h3>
+                            <p class="member-role">Student No: 242465733<br><span class="role-tag programmer">Programmer</span></p>
+                            <p><strong>Contributions:</strong></p>
+                            <ul class="member-contributions space-y-2">
+                                <li>Assisted with backend coding</li>
+                                <li>Worked on technical enhancements</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Programmer -->
+                    <div class="team-member" data-roles="programmer">
+                        <div class="member-photo">
+                            <div class="photo-placeholder">EM</div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Mothapo E.K</h3>
+                            <p class="member-role">Student No: 242360486<br><span class="role-tag programmer">Programmer</span></p>
+                            <p><strong>Contributions:</strong></p>
+                            <ul class="member-contributions space-y-2">
+                                <li>Helped design system logic</li>
+                                <li>Performed code testing</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Documentation & Presenter -->
+                    <div class="team-member" data-roles="documentation presenter">
+                        <div class="member-photo">
+                            <div class="photo-placeholder">MA</div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Mbele A.T</h3>
+                            <p class="member-role">Student No: 241415422<br>
+                                <span class="role-tag documentation">Documentation</span>
+                                <span class="role-tag presenter">Presenter</span>
+                                <span class="role-tag Leader">Group Leader</span>
+                            </p>
+                            <p><strong>Contributions:</strong></p>
+                            <ul class="member-contributions space-y-2">
+                                <li>Prepared reports and documentation</li>
+                                <li>Presented project outcomes</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Research & Presenter -->
+                    <div class="team-member" data-roles="research presenter">
+                        <div class="member-photo">
+                            <div class="photo-placeholder">FL</div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Lekalakala F.P</h3>
+                            <p class="member-role">Student No: 242073282<br>
+                                <span class="role-tag research">Research</span>
+                                <span class="role-tag presenter">Presenter</span>
+                            </p>
+                            <p><strong>Contributions:</strong></p>
+                            <ul class="member-contributions space-y-2">
+                                <li>Conducted background research</li>
+                                <li>Presented research findings</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Documentation -->
+                    <div class="team-member" data-roles="documentation">
+                        <div class="member-photo">
+                            <div class="photo-placeholder">KA</div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Aphane K</h3>
+                            <p class="member-role">Student No: 240701492<br><span class="role-tag documentation">Documentation</span></p>
+                            <p><strong>Contributions:</strong></p>
+                            <ul class="member-contributions space-y-2">
+                                <li>Maintained structured documentation</li>
+                                <li>Compiled research notes</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Documentation -->
+                    <div class="team-member" data-roles="documentation">
+                        <div class="member-photo">
+                            <div class="photo-placeholder">DM</div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Molatodi D</h3>
+                            <p class="member-role">Student No: 250909500<br><span class="role-tag documentation">Documentation</span></p>
+                            <p><strong>Contributions:</strong></p>
+                            <ul class="member-contributions space-y-2">
+                                <li>Edited reports for accuracy</li>
+                                <li>Organized project deliverables</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Research -->
+                    <div class="team-member" data-roles="research">
+                        <div class="member-photo">
+                            <div class="photo-placeholder">TM</div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Mathe T</h3>
+                            <p class="member-role">Student No: 241701492<br><span class="role-tag research">Research</span></p>
+                            <p><strong>Contributions:</strong></p>
+                            <ul class="member-contributions space-y-2">
+                                <li>Analyzed project-related data</li>
+                                <li>Contributed to literature review</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Research -->
+                    <div class="team-member" data-roles="research">
+                        <div class="member-photo">
+                            <div class="photo-placeholder">KM</div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Maepa K</h3>
+                            <p class="member-role">Student No: 210230122<br><span class="role-tag research">Research</span></p>
+                            <p><strong>Contributions:</strong></p>
+                            <ul class="member-contributions space-y-2">
+                                <li>Gathered supporting information</li>
+                                <li>Helped verify research findings</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Mathematics -->
+                    <div class="team-member" data-roles="mathematics">
+                        <div class="member-photo">
+                            <div class="photo-placeholder">MV</div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Mveke</h3>
+                            <p class="member-role">Student No: 251477531<br><span class="role-tag mathematics">Mathematics</span></p>
+                            <p><strong>Contributions:</strong></p>
+                            <ul class="member-contributions space-y-2">
+                                <li>Provided mathematical analysis</li>
+                                <li>Designed calculations for algorithms</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="integration section">
+            <div class="container">
+                <h2 class="integration-title">Academic Integration</h2>
+                <div class="integration-grid grid-cols-2 grid-md-4">
+                    <div class="integration-card">
+                        <svg class="integration-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M4 6h16v2H4zm0 4h16v2H4zm0 4h16v2H4zm0 4h16v2H4z"/>
+                        </svg>
+                        <h3 class="integration-card-title">Research & Analysis</h3>
+                        <p>Comprehensive literature review and data analysis of community garden impacts</p>
+                    </div>
+                    <div class="integration-card">
+                        <svg class="integration-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L2 7v10l10 5 10-5V7l-10-5zm0 2.24L18.63 7 12 9.76 5.37 7 12 4.24z"/>
+                        </svg>
+                        <h3 class="integration-card-title">Mathematical Application</h3>
+                        <p>Statistical analysis of food security data and calculations</p>
+                    </div>
+                    <div class="integration-card">
+                        <svg class="integration-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                        </svg>
+                        <h3 class="integration-card-title">Programming Implementation</h3>
+                        <p>Interactive web tools demonstrating logical thinking and problem-solving</p>
+                    </div>
+                    <div class="integration-card">
+                        <svg class="integration-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05.02.01.03.03.04.04 1.14.83 1.93 1.94 1.93 3.41V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
+                        <h3 class="integration-card-title">Teamwork & Collaboration</h3>
+                        <p>Coordinated research effort with clear role distribution and shared objectives</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="project-info section">
+            <div class="container">
+                <h2 class="text-2xl font-bold mb-4">Project Information</h2>
+                <div class="info-item">Community Development & Food Security</div>
+                <div class="info-item">Institution: Thswane University of Technology</div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">© 2025 Cyber Shield | Hydroponic Innovation for a Sustainable Future</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('active');
+            });
+            
+            // Team Member Filter Functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const teamMembers = document.querySelectorAll('.team-member');
+            const currentFilterSpan = document.getElementById('current-filter');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Update active button
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update current filter indicator
+                    currentFilterSpan.textContent = `Showing: ${this.textContent}`;
+                    
+                    // Filter team members
+                    teamMembers.forEach(member => {
+                        const roles = member.getAttribute('data-roles').split(' ');
+                        
+                        if (filter === 'all' || roles.includes(filter)) {
+                            member.classList.remove('hidden');
+                        } else {
+                            member.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            // Add loading animation
+            teamMembers.forEach((member, index) => {
+                member.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+</html>

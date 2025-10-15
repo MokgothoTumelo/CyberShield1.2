@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Virtual Farming </title>
+  <style>
+    :root {
+      --primary-color: #4CAF50;
+      --primary-hover: #45a049;
+      --error-color: #e74c3c;
+      --success-color: #2ecc71;
+      --text-color: #333;
+      --light-gray: #f5f5f5;
+      --border-color: #ddd;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --farm-green: #2e7d32;
+      --farm-light-green: #81c784;
+      --farm-brown: #8d6e63;
+      --farm-light-brown: #d7ccc8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      transition: all 0.3s ease;
+      border-top: 5px solid var(--farm-green);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--farm-green), var(--farm-light-green), var(--farm-green));
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+
+    .logo h1 {
+      color: var(--farm-green);
+      font-size: 28px;
+    }
+
+    h2 {
+      margin-bottom: 24px;
+      color: var(--farm-green);
+      font-weight: 600;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--farm-green);
+      box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+    }
+
+    input.valid {
+      border-color: var(--success-color);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232ecc71'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      padding-right: 40px;
+    }
+
+    input.invalid {
+      border-color: var(--error-color);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e74c3c'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      padding-right: 40px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 14px;
+      color: #777;
+      transition: color 0.2s;
+      font-weight: 500;
+    }
+
+    .toggle-password:hover {
+      color: var(--farm-green);
+    }
+
+    .strength-container {
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+
+    .strength-label {
+      font-size: 14px;
+      text-align: left;
+      margin-bottom: 6px;
+      height: 18px;
+      font-weight: 500;
+    }
+
+    .strength-meter {
+      width: 100%;
+      height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .strength-bar {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    .strength-requirements {
+      text-align: left;
+      font-size: 13px;
+      color: #666;
+      margin-top: 8px;
+    }
+
+    .requirement {
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+    }
+
+    .requirement.valid {
+      color: var(--success-color);
+    }
+
+    .requirement.valid::before {
+      content: "✓ ";
+      font-weight: bold;
+    }
+
+    .requirement.invalid::before {
+      content: "✗ ";
+      font-weight: bold;
+      color: var(--error-color);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--farm-green);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 10px;
+      transition: background-color 0.3s, transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: var(--primary-hover);
+    }
+
+    button:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .error {
+      color: var(--error-color);
+      margin-top: 12px;
+      font-size: 14px;
+      min-height: 20px;
+      text-align: left;
+      padding: 8px 12px;
+      background-color: rgba(231, 76, 60, 0.1);
+      border-radius: 6px;
+      display: none;
+    }
+
+    .success {
+      color: var(--success-color);
+      margin-top: 12px;
+      font-size: 14px;
+      min-height: 20px;
+      text-align: left;
+      padding: 8px 12px;
+      background-color: rgba(46, 204, 113, 0.1);
+      border-radius: 6px;
+      display: none;
+    }
+
+    .toggle {
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--farm-green);
+      cursor: pointer;
+      transition: color 0.2s;
+      font-weight: 500;
+    }
+
+    .toggle:hover {
+      color: #1b5e20;
+      text-decoration: underline;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      margin: 15px 0;
+      text-align: left;
+    }
+
+    .remember-me input {
+      width: auto;
+      margin-right: 8px;
+    }
+
+    .forgot-password {
+      text-align: right;
+      margin-top: 10px;
+    }
+
+    .forgot-password a {
+      color: var(--farm-green);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .forgot-password a:hover {
+      text-decoration: underline;
+    }
+
+    .social-login {
+      margin: 20px 0;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .divider::before {
+      margin-right: 10px;
+    }
+
+    .divider::after {
+      margin-left: 10px;
+    }
+
+    .social-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .social-btn {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .social-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .social-btn.google {
+      border-color: #db4437;
+      color: #db4437;
+    }
+
+    .social-btn.google:hover {
+      background-color: #fce8e6;
+    }
+
+    .social-btn.facebook {
+      border-color: #1877F2;
+      color: #1877F2;
+    }
+
+    .social-btn.facebook:hover {
+      background-color: #e7f3ff;
+    }
+
+    .security-setup {
+      display: none;
+      margin: 20px 0;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border-left: 4px solid var(--farm-green);
+    }
+
+    .security-setup h3 {
+      margin-bottom: 15px;
+      color: var(--farm-green);
+      font-size: 16px;
+    }
+
+    .security-question-select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 15px;
+      background: white;
+    }
+
+    .security-question-select:focus {
+      outline: none;
+      border-color: var(--farm-green);
+    }
+
+    .custom-question-input {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .reset-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    .reset-option {
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: white;
+    }
+
+    .reset-option:hover {
+      border-color: var(--farm-green);
+      background: #f8fff8;
+    }
+
+    .reset-option.selected {
+      border-color: var(--farm-green);
+      background: #f0fff0;
+    }
+
+    .option-description {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .backup-codes {
+      background: #fff9e6;
+      border: 1px solid #ffd166;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+      font-family: monospace;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .backup-codes h4 {
+      margin-bottom: 10px;
+      color: #e67700;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--farm-green);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .close-modal:hover {
+      color: var(--error-color);
+    }
+
+    .reset-steps {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+      position: relative;
+    }
+
+    .reset-steps::before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #e0e0e0;
+      z-index: 1;
+    }
+
+    .step {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step.active {
+      background: var(--farm-green);
+      color: white;
+    }
+
+    .step.completed {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .step-label {
+      position: absolute;
+      top: 35px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      white-space: nowrap;
+      color: #666;
+    }
+
+    .step-content {
+      display: none;
+    }
+
+    .step-content.active {
+      display: block;
+    }
+
+    .back-button {
+      background: transparent;
+      color: var(--farm-green);
+      border: 1px solid var(--farm-green);
+      margin-right: 10px;
+      width: auto;
+      padding: 10px 20px;
+    }
+
+    .back-button:hover {
+      background: var(--farm-light-green);
+      color: white;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+      }
+      
+      input, button {
+        padding: 16px;
+        font-size: 16px;
+      }
+
+      .social-buttons {
+        flex-direction: column;
+      }
+
+      .modal-content {
+        padding: 20px;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .back-button {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <h1>Virtual Farming</h1>
+    </div>
+    <h2 id="form-title">Login</h2>
+    
+    <div class="form-container">
+      <input type="text" id="username" placeholder="Username" required aria-label="Username" aria-required="true">
+      
+      <div class="input-group" id="email-group" style="display: none;">
+        <input type="email" id="email" placeholder="Email" required aria-label="Email" aria-required="true">
+      </div>
+
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Password" required aria-label="Password" aria-required="true">
+        <span class="toggle-password" onclick="togglePassword('password')" aria-label="Toggle password visibility">Show</span>
+      </div>
+
+      <div class="remember-me">
+        <input type="checkbox" id="remember">
+        <label for="remember">Remember me</label>
+      </div>
+
+      <div id="confirm-password-group" style="display: none;">
+        <div class="input-group">
+          <input type="password" id="confirm-password" placeholder="Confirm Password" required aria-label="Confirm Password" aria-required="true">
+          <span class="toggle-password" onclick="togglePassword('confirm-password')" aria-label="Toggle password visibility">Show</span>
+        </div>
+
+        <div class="strength-container">
+          <div class="strength-label" id="strength-label"></div>
+          <div class="strength-meter">
+            <div class="strength-bar" id="strength-bar"></div>
+          </div>
+          <div class="strength-requirements" id="strength-requirements">
+            <div class="requirement invalid" id="req-length">At least 6 characters</div>
+            <div class="requirement invalid" id="req-uppercase">One uppercase letter</div>
+            <div class="requirement invalid" id="req-number">One number</div>
+            <div class="requirement invalid" id="req-special">One special character</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="security-setup" id="security-setup">
+        <h3>🔒 Security Setup (For Password Recovery)</h3>
+        
+        <select class="security-question-select" id="security-question" onchange="toggleCustomQuestion()">
+          <option value="">Choose a security question</option>
+          <option value="What was the name of your first pet?">What was the name of your first pet?</option>
+          <option value="What city were you born in?">What city were you born in?</option>
+          <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+          <option value="What was your favorite childhood cartoon?">What was your favorite childhood cartoon?</option>
+          <option value="What is the name of your elementary school?">What is the name of your elementary school?</option>
+          <option value="What is your favorite sports team?">What is your favorite sports team?</option>
+          <option value="custom">Write my own question</option>
+        </select>
+        
+        <div class="custom-question-input" id="custom-question-container">
+          <input type="text" id="custom-question" placeholder="Enter your custom security question">
+        </div>
+        
+        <div class="input-group">
+          <input type="text" id="security-answer-signup" placeholder="Your answer" required aria-label="Security answer" aria-required="true">
+        </div>
+        
+        <div class="backup-codes" id="backup-codes-container" style="display: none;">
+          <h4>📝 Save These Backup Codes</h4>
+          <div id="backup-codes"></div>
+          <small>Keep these codes safe! You can use them to reset your password if you forget your security answer.</small>
+        </div>
+      </div>
+
+      <div class="forgot-password" id="forgot-password">
+        <a href="#" onclick="showResetModal()">Forgot password?</a>
+      </div>
+
+      <button onclick="handleSubmit()" id="action-btn" aria-label="Login">Login</button>
+      
+      <div class="social-login">
+        <div class="divider">Or continue with</div>
+        <div class="social-buttons">
+          <button class="social-btn google" onclick="socialLogin('google')">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#DB4437" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#4285F4" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#34A853" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Google
+          </button>
+          <button class="social-btn facebook" onclick="socialLogin('facebook')">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            Facebook
+          </button>
+        </div>
+      </div>
+
+      <div id="error" class="error" role="alert" aria-live="assertive"></div>
+      <div id="success" class="success" role="alert" aria-live="assertive"></div>
+      <div class="toggle" onclick="toggleForm()" id="toggle-text">
+        Don't have an account? Sign Up
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="resetModal" role="dialog" aria-labelledby="resetModalTitle" aria-modal="true">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeResetModal()">&times;</span>
+      <h2 id="resetModalTitle">Reset Your Password</h2>
+      
+      <div class="reset-steps">
+        <div class="step active" id="step1">1<span class="step-label">Identify</span></div>
+        <div class="step" id="step2">2<span class="step-label">Verify</span></div>
+        <div class="step" id="step3">3<span class="step-label">New Password</span></div>
+      </div>
+
+      <div class="step-content active" id="step1-content">
+        <p>Enter your username or email to reset your password.</p>
+        <div class="input-group">
+          <input type="text" id="reset-identifier" placeholder="Username or Email" required aria-label="Username or Email" aria-required="true">
+        </div>
+        
+        <div class="reset-options" id="reset-options" style="display: none;">
+          <div class="reset-option" onclick="selectResetOption('security', event)">
+            <strong>🔐 Answer Security Question</strong>
+            <div class="option-description">Quick reset using your security question</div>
+          </div>
+          <div class="reset-option" onclick="selectResetOption('backup', event)">
+            <strong>📝 Use Backup Code</strong>
+            <div class="option-description">Use one of your saved backup codes</div>
+          </div>
+        </div>
+        
+        <div class="button-group">
+          <button class="back-button" onclick="closeResetModal()">Cancel</button>
+          <button onclick="startPasswordReset()">Continue</button>
+        </div>
+      </div>
+
+      <div class="step-content" id="step2-security">
+        <p>Answer your security question:</p>
+        <div class="input-group">
+          <label id="security-question-label"></label>
+          <input type="text" id="security-answer" placeholder="Your answer" required aria-label="Security answer" aria-required="true">
+        </div>
+        <div class="button-group">
+          <button class="back-button" onclick="previousStep()">Back</button>
+          <button onclick="verifySecurityAnswer()">Verify</button>
+        </div>
+      </div>
+
+      <div class="step-content" id="step2-backup">
+        <p>Enter one of your backup codes:</p>
+        <div class="input-group">
+          <input type="text" id="backup-code" placeholder="Enter backup code" required aria-label="Backup code" aria-required="true">
+        </div>
+        <div class="button-group">
+          <button class="back-button" onclick="previousStep()">Back</button>
+          <button onclick="verifyBackupCode()">Verify</button>
+        </div>
+      </div>
+
+      <div class="step-content" id="step3-content">
+        <p>Enter your new password:</p>
+        <div class="input-group">
+          <input type="password" id="new-password" placeholder="New Password" required aria-label="New Password" aria-required="true">
+          <span class="toggle-password" onclick="togglePassword('new-password')" aria-label="Toggle password visibility">Show</span>
+        </div>
+        <div class="input-group">
+          <input type="password" id="confirm-new-password" placeholder="Confirm New Password" required aria-label="Confirm New Password" aria-required="true">
+          <span class="toggle-password" onclick="togglePassword('confirm-new-password')" aria-label="Toggle password visibility">Show</span>
+        </div>
+        
+        <div class="strength-container">
+          <div class="strength-label" id="new-strength-label"></div>
+          <div class="strength-meter">
+            <div class="strength-bar" id="new-strength-bar"></div>
+          </div>
+          <div class="strength-requirements" id="new-strength-requirements">
+            <div class="requirement invalid" id="new-req-length">At least 6 characters</div>
+            <div class="requirement invalid" id="new-req-uppercase">One uppercase letter</div>
+            <div class="requirement invalid" id="new-req-number">One number</div>
+            <div class="requirement invalid" id="new-req-special">One special character</div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button class="back-button" onclick="previousStep()">Back</button>
+          <button onclick="completePasswordReset()">Reset Password</button>
+        </div>
+      </div>
+
+      <div id="reset-error" class="error" style="display: none;" role="alert" aria-live="assertive"></div>
+      <div id="reset-success" class="success" style="display: none;" role="alert" aria-live="assertive"></div>
+    </div>
+  </div>
+
+  <script>
+    let isLogin = true;
+    let loginAttempts = parseInt(localStorage.getItem('loginAttempts') || '0');
+    const maxAttempts = 5;
+    let currentResetStep = 1;
+    let resetUserData = null;
+    let selectedResetMethod = null;
+
+    function initializeDefaultUserData() {
+      const username = localStorage.getItem('username');
+      if (!username) {
+        console.log('No existing user found - initializing with default data');
+      } else {
+        console.log('Existing user found:', username);
+      }
+    }
+
+    function toggleSecuritySetup(show) {
+      document.getElementById('security-setup').style.display = show ? 'block' : 'none';
+    }
+
+    function toggleCustomQuestion() {
+      const questionSelect = document.getElementById('security-question');
+      const customContainer = document.getElementById('custom-question-container');
+      customContainer.style.display = questionSelect.value === 'custom' ? 'block' : 'none';
+    }
+
+    function generateBackupCodes() {
+      const codes = [];
+      for (let i = 0; i < 6; i++) {
+        const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+        codes.push(code);
+      }
+      return codes;
+    }
+
+    function showBackupCodes(codes) {
+      const container = document.getElementById('backup-codes-container');
+      const codesElement = document.getElementById('backup-codes');
+      
+      codesElement.innerHTML = codes.map(code => 
+        `<div>${code}</div>`
+      ).join('');
+      container.style.display = 'block';
+    }
+
+    function showResetModal() {
+      document.getElementById('resetModal').style.display = 'flex';
+      currentResetStep = 1;
+      selectedResetMethod = null;
+      updateResetSteps();
+      document.getElementById('reset-identifier').value = '';
+      document.getElementById('security-answer').value = '';
+      document.getElementById('backup-code').value = '';
+      document.getElementById('new-password').value = '';
+      document.getElementById('confirm-new-password').value = '';
+      hideResetMessages();
+      document.getElementById('reset-options').style.display = 'none';
+      document.querySelectorAll('.reset-option').forEach(opt => {
+        opt.style.display = 'block';
+        opt.classList.remove('selected');
+      });
+    }
+
+    function closeResetModal() {
+      document.getElementById('resetModal').style.display = 'none';
+      resetUserData = null;
+    }
+
+    function updateResetSteps() {
+      for (let i = 1; i <= 3; i++) {
+        const step = document.getElementById(`step${i}`);
+        if (i < currentResetStep) {
+          step.className = 'step completed';
+        } else if (i === currentResetStep) {
+          step.className = 'step active';
+        } else {
+          step.className = 'step';
+        }
+      }
+
+      document.querySelectorAll('.step-content').forEach(content => {
+        content.style.display = 'none';
+      });
+      
+      if (currentResetStep === 1) {
+        document.getElementById('step1-content').style.display = 'block';
+      } else if (currentResetStep === 2 && selectedResetMethod) {
+        document.getElementById(`step2-${selectedResetMethod}`).style.display = 'block';
+      } else if (currentResetStep === 3) {
+        document.getElementById('step3-content').style.display = 'block';
+      }
+    }
+
+    function previousStep() {
+      if (currentResetStep > 1) {
+        currentResetStep--;
+        updateResetSteps();
+      }
+    }
+
+    function showResetOptions(userData) {
+      document.getElementById('reset-options').style.display = 'block';
+      
+      const hasSecurityQuestion = userData.securityQuestion && userData.securityAnswer;
+      const hasBackupCodes = userData.backupCodes && userData.backupCodes.length > 0;
+      
+      const securityOption = document.querySelector('[onclick="selectResetOption(\'security\', event)"]');
+      const backupOption = document.querySelector('[onclick="selectResetOption(\'backup\', event)"]');
+      
+      if (!hasSecurityQuestion) {
+        securityOption.style.display = 'none';
+      } else {
+        securityOption.style.display = 'block';
+      }
+      if (!hasBackupCodes) {
+        backupOption.style.display = 'none';
+      } else {
+        backupOption.style.display = 'block';
+      }
+    }
+
+    async function startPasswordReset() {
+      const identifier = sanitizeInput(document.getElementById('reset-identifier').value.trim());
+      
+      if (!identifier) {
+        showResetError('Please enter your username or email');
+        return;
+      }
+
+      setResetLoading(true);
+
+      const savedUsername = localStorage.getItem('username');
+      const savedEmail = localStorage.getItem('email');
+      
+      console.log('Looking for user:', identifier);
+      console.log('Saved username:', savedUsername);
+      console.log('Saved email:', savedEmail);
+      
+      const identifierLower = identifier.toLowerCase();
+      const savedUsernameLower = (savedUsername || '').toLowerCase();
+      const savedEmailLower = (savedEmail || '').toLowerCase();
+      
+      if (identifierLower !== savedUsernameLower && identifierLower !== savedEmailLower) {
+        showResetError('No account found with that username or email');
+        setResetLoading(false);
+        return;
+      }
+
+      resetUserData = {
+        username: savedUsername,
+        email: savedEmail,
+        securityQuestion: localStorage.getItem('securityQuestion'),
+        securityAnswer: localStorage.getItem('securityAnswer'),
+        backupCodes: JSON.parse(localStorage.getItem('backupCodes') || '[]')
+      };
+
+      console.log('Found user data:', resetUserData);
+
+      document.getElementById('security-question-label').textContent = resetUserData.securityQuestion || 'No security question set';
+      
+      setResetLoading(false);
+      showResetOptions(resetUserData);
+      
+      if (!resetUserData.securityQuestion && resetUserData.backupCodes.length === 0) {
+        showResetError('No password recovery methods set up. Please contact support.');
+        return;
+      }
+    }
+
+    function selectResetOption(method, event) {
+      event.preventDefault();
+      selectedResetMethod = method;
+      document.querySelectorAll('.reset-option').forEach(opt => opt.classList.remove('selected'));
+      event.target.closest('.reset-option').classList.add('selected');
+      currentResetStep = 2;
+      updateResetSteps();
+      console.log(`Selected reset method: ${method}`);
+    }
+
+    function verifySecurityAnswer() {
+      const answer = sanitizeInput(document.getElementById('security-answer').value.trim());
+      
+      if (!answer) {
+        showResetError('Please answer the security question');
+        return;
+      }
+
+      const savedAnswer = localStorage.getItem('securityAnswer');
+      
+      console.log('User entered:', answer);
+      console.log('Saved answer:', savedAnswer);
+      
+      if (answer === savedAnswer) {
+        hideResetMessages();
+        currentResetStep = 3;
+        updateResetSteps();
+      } else {
+        showResetError('Incorrect answer. Please try again.');
+      }
+    }
+
+    function verifyBackupCode() {
+      const enteredCode = sanitizeInput(document.getElementById('backup-code').value.trim().toUpperCase());
+      const backupCodes = JSON.parse(localStorage.getItem('backupCodes') || '[]');
+      
+      if (!enteredCode) {
+        showResetError('Please enter a backup code');
+        return;
+      }
+
+      const codeIndex = backupCodes.indexOf(enteredCode);
+      
+      if (codeIndex !== -1) {
+        backupCodes.splice(codeIndex, 1);
+        localStorage.setItem('backupCodes', JSON.stringify(backupCodes));
+        
+        hideResetMessages();
+        currentResetStep = 3;
+        updateResetSteps();
+      } else {
+        showResetError('Invalid backup code. Please try again.');
+      }
+    }
+
+    async function completePasswordReset() {
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-new-password').value;
+
+      if (!newPassword || !confirmPassword) {
+        showResetError('Please fill in both password fields');
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        showResetError('Passwords do not match');
+        return;
+      }
+
+      const strength = checkNewPasswordStrength(newPassword);
+      if (strength < 2) {
+        showResetError('Please choose a stronger password');
+        return;
+      }
+
+      setResetLoading(true);
+
+      try {
+        const passwordHash = await hashPassword(newPassword);
+        localStorage.setItem('passwordHash', passwordHash);
+        
+        setResetLoading(false);
+        showResetSuccess('Password reset successfully! You can now login with your new password.');
+        
+        setTimeout(() => {
+          closeResetModal();
+          if (isLogin) {
+            document.getElementById('username').value = resetUserData.username;
+          }
+        }, 2000);
+      } catch (error) {
+        showResetError('An error occurred. Please try again.');
+        setResetLoading(false);
+      }
+    }
+
+    function checkNewPasswordStrength(password) {
+      const bar = document.getElementById('new-strength-bar');
+      const label = document.getElementById('new-strength-label');
+      
+      const hasMinLength = password.length >= 6;
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasNumber = /[0-9]/.test(password);
+      const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
+      
+      document.getElementById('new-req-length').className = hasMinLength ? 'requirement valid' : 'requirement invalid';
+      document.getElementById('new-req-uppercase').className = hasUpperCase ? 'requirement valid' : 'requirement invalid';
+      document.getElementById('new-req-number').className = hasNumber ? 'requirement valid' : 'requirement invalid';
+      document.getElementById('new-req-special').className = hasSpecialChar ? 'requirement valid' : 'requirement invalid';
+      
+      let strength = 0;
+      if (hasMinLength) strength++;
+      if (hasUpperCase) strength++;
+      if (hasNumber) strength++;
+      if (hasSpecialChar) strength++;
+      
+      switch (strength) {
+        case 0:
+          bar.style.width = '0%';
+          bar.style.backgroundColor = 'transparent';
+          label.textContent = '';
+          break;
+        case 1:
+          bar.style.width = '25%';
+          bar.style.backgroundColor = '#e74c3c';
+          label.textContent = 'Weak';
+          label.style.color = '#e74c3c';
+          break;
+        case 2:
+          bar.style.width = '50%';
+          bar.style.backgroundColor = '#f39c12';
+          label.textContent = 'Fair';
+          label.style.color = '#f39c12';
+          break;
+        case 3:
+          bar.style.width = '75%';
+          bar.style.backgroundColor = '#3498db';
+          label.textContent = 'Good';
+          label.style.color = '#3498db';
+          break;
+        case 4:
+          bar.style.width = '100%';
+          bar.style.backgroundColor = '#2ecc71';
+          label.textContent = 'Strong';
+          label.style.color = '#2ecc71';
+          break;
+      }
+      
+      return strength;
+    }
+
+    function showResetError(message) {
+      const error = document.getElementById('reset-error');
+      error.textContent = message;
+      error.style.display = 'block';
+      document.getElementById('reset-success').style.display = 'none';
+    }
+
+    function showResetSuccess(message) {
+      const success = document.getElementById('reset-success');
+      success.textContent = message;
+      success.style.display = 'block';
+      document.getElementById('reset-error').style.display = 'none';
+    }
+
+    function hideResetMessages() {
+      document.getElementById('reset-error').style.display = 'none';
+      document.getElementById('reset-success').style.display = 'none';
+    }
+
+    function setResetLoading(loading) {
+      const buttons = document.querySelectorAll('#resetModal button:not(.back-button)');
+      buttons.forEach(button => {
+        if (loading) {
+          button.innerHTML = '<div class="loading"></div> Processing...';
+          button.disabled = true;
+        } else {
+          switch (currentResetStep) {
+            case 1:
+              button.textContent = 'Continue';
+              break;
+            case 2:
+              button.textContent = selectedResetMethod === 'security' ? 'Verify' : 'Verify Code';
+              break;
+            case 3:
+              button.textContent = 'Reset Password';
+              break;
+          }
+          button.disabled = false;
+        }
+      });
+    }
+
+    function checkRateLimit() {
+      const lastAttemptTime = localStorage.getItem('lastAttemptTime');
+      const now = Date.now();
+      
+      if (lastAttemptTime && now - lastAttemptTime > 15 * 60 * 1000) {
+        loginAttempts = 0;
+        localStorage.setItem('loginAttempts', '0');
+      }
+      
+      if (loginAttempts >= maxAttempts) {
+        showError('Too many failed attempts. Please try again in 15 minutes.');
+        return false;
+      }
+      return true;
+    }
+
+    function updateRateLimit() {
+      loginAttempts++;
+      localStorage.setItem('loginAttempts', loginAttempts.toString());
+      localStorage.setItem('lastAttemptTime', Date.now().toString());
+    }
+
+    function resetRateLimit() {
+      loginAttempts = 0;
+      localStorage.setItem('loginAttempts', '0');
+    }
+
+    function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
+
+    function setupRealTimeValidation() {
+      const inputs = document.querySelectorAll('input[required]');
+      inputs.forEach(input => {
+        input.addEventListener('input', debounce(function() {
+          validateField(this);
+          autoSaveForm();
+        }, 300));
+        
+        input.addEventListener('blur', function() {
+          validateField(this);
+        });
+      });
+
+      document.getElementById('new-password').addEventListener('input', debounce(function() {
+        checkNewPasswordStrength(this.value);
+      }, 300));
+    }
+
+    function validateField(field) {
+      const value = field.value.trim();
+      field.classList.remove('valid', 'invalid');
+      
+      if (value === '') {
+        return false;
+      }
+      
+      let isValid = true;
+      
+      switch (field.id) {
+        case 'username':
+          isValid = value.length >= 3;
+          break;
+        case 'email':
+          isValid = validateEmail(value);
+          break;
+        case 'password':
+          isValid = value.length >= 6;
+          if (!isLogin) {
+            checkPasswordStrength(value);
+          }
+          break;
+        case 'confirm-password':
+          const password = document.getElementById('password').value;
+          isValid = value === password && value.length >= 6;
+          break;
+      }
+      
+      if (isValid) {
+        field.classList.add('valid');
+      } else {
+        field.classList.add('invalid');
+      }
+      
+      return isValid;
+    }
+
+    function validateEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    function autoSaveForm() {
+      const formData = {
+        username: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        remember: document.getElementById('remember').checked,
+        isLogin: isLogin
+      };
+      sessionStorage.setItem('formAutosave', JSON.stringify(formData));
+    }
+
+    function loadAutoSavedForm() {
+      const saved = sessionStorage.getItem('formAutosave');
+      if (saved) {
+        const formData = JSON.parse(saved);
+        
+        if (formData.isLogin === isLogin) {
+          document.getElementById('username').value = formData.username || '';
+          document.getElementById('email').value = formData.email || '';
+          document.getElementById('remember').checked = formData.remember || false;
+          
+          validateField(document.getElementById('username'));
+          if (!isLogin) {
+            validateField(document.getElementById('email'));
+          }
+        }
+      }
+    }
+
+    function clearAutoSavedForm() {
+      sessionStorage.removeItem('formAutosave');
+    }
+
+    function sanitizeInput(input) {
+      return input.replace(/[<>{}]/g, '').trim().substring(0, 100);
+    }
+
+    function setLoading(loading) {
+      const button = document.getElementById('action-btn');
+      const originalText = isLogin ? 'Login' : 'Sign Up';
+      
+      if (loading) {
+        button.innerHTML = '<div class="loading"></div> Processing...';
+        button.disabled = true;
+        button.setAttribute('aria-disabled', 'true');
+        button.setAttribute('aria-label', 'Processing, please wait');
+      } else {
+        button.textContent = originalText;
+        button.disabled = false;
+        button.setAttribute('aria-disabled', 'false');
+        button.setAttribute('aria-label', originalText);
+      }
+    }
+
+    async function handleSubmit() {
+      if (!checkRateLimit()) {
+        return;
+      }
+
+      const username = sanitizeInput(document.getElementById('username').value.trim());
+      const email = sanitizeInput(document.getElementById('email').value.trim());
+      const password = document.getElementById('password').value.trim();
+      const confirmPassword = document.getElementById('confirm-password').value.trim();
+      const rememberMe = document.getElementById('remember').checked;
+
+      if (!isLogin) {
+        const securityQuestion = sanitizeInput(document.getElementById('security-question').value);
+        const customQuestion = sanitizeInput(document.getElementById('custom-question').value);
+        const securityAnswer = sanitizeInput(document.getElementById('security-answer-signup').value.trim());
+        
+        if (!securityQuestion) {
+          showError('Please select a security question');
+          return;
+        }
+        
+        if (securityQuestion === 'custom' && !customQuestion) {
+          showError('Please enter your custom security question');
+          return;
+        }
+        
+        if (!securityAnswer) {
+          showError('Please provide an answer to your security question');
+          return;
+        }
+
+        console.log('Saving security answer:', securityAnswer);
+        localStorage.setItem('securityAnswer', securityAnswer);
+        const finalQuestion = securityQuestion === 'custom' ? customQuestion : securityQuestion;
+        localStorage.setItem('securityQuestion', finalQuestion);
+      }
+
+      if (!validateAllFields()) {
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const savedUser = localStorage.getItem('username');
+        const savedHash = localStorage.getItem('passwordHash');
+
+        if (isLogin) {
+          const enteredHash = await hashPassword(password);
+          if (username === savedUser && enteredHash === savedHash) {
+            resetRateLimit();
+            completeLogin(username, rememberMe);
+          } else {
+            updateRateLimit();
+            showError(`Invalid username or password. Attempts remaining: ${maxAttempts - loginAttempts}`);
+          }
+        } else {
+          if (savedUser && savedUser === username) {
+            showError('Username already exists. Please choose a different one.');
+          } else {
+            const passwordHash = await hashPassword(password);
+            const backupCodes = generateBackupCodes();
+            
+            localStorage.setItem('username', username);
+            localStorage.setItem('email', email);
+            localStorage.setItem('passwordHash', passwordHash);
+            localStorage.setItem('backupCodes', JSON.stringify(backupCodes));
+            
+            showBackupCodes(backupCodes);
+            
+            showSuccess('Account created successfully! Please save your backup codes.');
+            clearAutoSavedForm();
+            
+            setTimeout(() => {
+              document.getElementById('backup-codes-container').scrollIntoView();
+            }, 1500);
+          }
+        }
+      } catch (error) {
+        showError('An error occurred. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function validateAllFields() {
+      hideMessages();
+      
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      let isValid = true;
+
+      if (username === '' || password === '') {
+        showError('Please fill in all required fields');
+        isValid = false;
+      }
+
+      if (username.length < 3) {
+        showError('Username must be at least 3 characters long');
+        isValid = false;
+      }
+
+      if (password.length < 6) {
+        showError('Password must be at least 6 characters long');
+        isValid = false;
+      }
+
+      if (!isLogin) {
+        const email = document.getElementById('email').value.trim();
+        const confirmPassword = document.getElementById('confirm-password').value.trim();
+
+        if (email === '') {
+          showError('Please fill in all required fields');
+          isValid = false;
+        } else if (!validateEmail(email)) {
+          showError('Please enter a valid email address');
+          isValid = false;
+        }
+
+        if (password !== confirmPassword) {
+          showError('Passwords do not match');
+          isValid = false;
+        }
+
+        const strength = checkPasswordStrength(password);
+        if (strength < 2) {
+          showError('Please choose a stronger password');
+          isValid = false;
+        }
+      }
+
+      return isValid;
+    }
+
+    function toggleForm() {
+      const title = document.getElementById('form-title');
+      const actionBtn = document.getElementById('action-btn');
+      const toggleText = document.getElementById('toggle-text');
+      const confirmPasswordGroup = document.getElementById('confirm-password-group');
+      const emailGroup = document.getElementById('email-group');
+      const forgotPassword = document.getElementById('forgot-password');
+      const securitySetup = document.getElementById('security-setup');
+      
+      document.getElementById('password').value = '';
+      document.getElementById('confirm-password').value = '';
+      hideMessages();
+      clearAutoSavedForm();
+
+      isLogin = !isLogin;
+
+      if (isLogin) {
+        title.textContent = 'Login';
+        actionBtn.textContent = 'Login';
+        toggleText.textContent = "Don't have an account? Sign Up";
+        confirmPasswordGroup.style.display = 'none';
+        emailGroup.style.display = 'none';
+        forgotPassword.style.display = 'block';
+        securitySetup.style.display = 'none';
+      } else {
+        title.textContent = 'Sign Up';
+        actionBtn.textContent = 'Sign Up';
+        toggleText.textContent = "Already have an account? Login";
+        confirmPasswordGroup.style.display = 'block';
+        emailGroup.style.display = 'block';
+        forgotPassword.style.display = 'none';
+        securitySetup.style.display = 'block';
+      }
+
+      document.getElementById('backup-codes-container').style.display = 'none';
+
+      loadAutoSavedForm();
+    }
+
+    function togglePassword(id) {
+      const field = document.getElementById(id);
+      const toggle = field.parentNode.querySelector('.toggle-password');
+      
+      if (field.type === 'password') {
+        field.type = 'text';
+        toggle.textContent = 'Hide';
+        toggle.setAttribute('aria-label', 'Hide password');
+      } else {
+        field.type = 'password';
+        toggle.textContent = 'Show';
+        toggle.setAttribute('aria-label', 'Toggle password visibility');
+      }
+    }
+
+    function checkPasswordStrength(password) {
+      const bar = document.getElementById('strength-bar');
+      const label = document.getElementById('strength-label');
+      
+      const hasMinLength = password.length >= 6;
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasNumber = /[0-9]/.test(password);
+      const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
+      
+      document.getElementById('req-length').className = hasMinLength ? 'requirement valid' : 'requirement invalid';
+      document.getElementById('req-uppercase').className = hasUpperCase ? 'requirement valid' : 'requirement invalid';
+      document.getElementById('req-number').className = hasNumber ? 'requirement valid' : 'requirement invalid';
+      document.getElementById('req-special').className = hasSpecialChar ? 'requirement valid' : 'requirement invalid';
+      
+      let strength = 0;
+      if (hasMinLength) strength++;
+      if (hasUpperCase) strength++;
+      if (hasNumber) strength++;
+      if (hasSpecialChar) strength++;
+      
+      switch (strength) {
+        case 0:
+          bar.style.width = '0%';
+          bar.style.backgroundColor = 'transparent';
+          label.textContent = '';
+          break;
+        case 1:
+          bar.style.width = '25%';
+          bar.style.backgroundColor = '#e74c3c';
+          label.textContent = 'Weak';
+          label.style.color = '#e74c3c';
+          break;
+        case 2:
+          bar.style.width = '50%';
+          bar.style.backgroundColor = '#f39c12';
+          label.textContent = 'Fair';
+          label.style.color = '#f39c12';
+          break;
+        case 3:
+          bar.style.width = '75%';
+          bar.style.backgroundColor = '#3498db';
+          label.textContent = 'Good';
+          label.style.color = '#3498db';
+          break;
+        case 4:
+          bar.style.width = '100%';
+          bar.style.backgroundColor = '#2ecc71';
+          label.textContent = 'Strong';
+          label.style.color = '#2ecc71';
+          break;
+      }
+      
+      return strength;
+    }
+
+    function showError(message) {
+      const error = document.getElementById('error');
+      error.textContent = message;
+      error.style.display = 'block';
+    }
+    
+    function showSuccess(message) {
+      const success = document.getElementById('success');
+      success.textContent = message;
+      success.style.display = 'block';
+    }
+    
+    function hideMessages() {
+      document.getElementById('error').style.display = 'none';
+      document.getElementById('success').style.display = 'none';
+    }
+
+    async function hashPassword(password) {
+      const encoder = new TextEncoder();
+      const salt = 'static-salt-for-demo-only';
+      const data = encoder.encode(password + salt);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function socialLogin(provider) {
+      showSuccess(`Connecting to ${provider}...`);
+      
+      setTimeout(() => {
+        const socialUser = {
+          id: `${provider}_${Date.now()}`,
+          name: `User from ${provider}`,
+          email: `user@${provider}.com`,
+          provider: provider
+        };
+        
+        localStorage.setItem('socialUser', JSON.stringify(socialUser));
+        localStorage.setItem('loggedIn', 'true');
+        
+        showSuccess(`Successfully logged in with ${provider}!`);
+        
+        setTimeout(() => {
+          window.location.href = 'home.html';
+        }, 1000);
+      }, 1500);
+    }
+
+    function completeLogin(username, rememberMe) {
+      if (rememberMe) {
+        localStorage.setItem('rememberedUser', username);
+      } else {
+        localStorage.removeItem('rememberedUser');
+      }
+      
+      localStorage.setItem('loggedIn', 'true');
+      showSuccess('Login successful! Redirecting...');
+      clearAutoSavedForm();
+      
+      setTimeout(() => {
+        window.location.href = 'home.html';
+      }, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const rememberedUser = localStorage.getItem('rememberedUser');
+      if (rememberedUser) {
+        document.getElementById('username').value = rememberedUser;
+        document.getElementById('remember').checked = true;
+      }
+      
+      setupRealTimeValidation();
+      loadAutoSavedForm();
+      initializeDefaultUserData();
+
+      document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          handleSubmit();
+        }
+      });
+
+      window.addEventListener('click', function(event) {
+        const modal = document.getElementById('resetModal');
+        if (event.target === modal) {
+          closeResetModal();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
